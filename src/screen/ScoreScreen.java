@@ -156,7 +156,7 @@ public class ScoreScreen extends Screen {
 	 * Saves the score as a high score.
 	 */
 	private void saveScore() {
-		highScores.add(new Score(new String(this.name), score, this.stage, this.shipsDestroyed, this.bulletsShot, this.accuracy));
+		highScores.add(new Score(score, this.stage, this.shipsDestroyed, this.bulletsShot, this.accuracy));
 		Collections.sort(highScores);
 		if (highScores.size() > MAX_HIGH_SCORE_NUM)
 			highScores.remove(highScores.size() - 1);

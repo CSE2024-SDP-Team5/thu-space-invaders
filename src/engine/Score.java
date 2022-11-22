@@ -8,8 +8,6 @@ package engine;
  */
 public class Score implements Comparable<Score> {
 
-	/** Player's name. */
-	private String name;
 	/** Score points. */
 	private int score;
 	/** Stage */
@@ -37,8 +35,7 @@ public class Score implements Comparable<Score> {
 	 * @param accuracy
 	 *            Accuracy Score.
 	 */
-	public Score(final String name, final int score, final int stage, final int killed, final int bullets, final float accuracy) {
-		this.name = name;
+	public Score(final int score, final int stage, final int killed, final int bullets, final float accuracy) {
 		this.score = score;
 		this.stage = stage;
 		this.killed = killed;
@@ -47,20 +44,11 @@ public class Score implements Comparable<Score> {
 	}
 
 	// 현재 프로젝트에서 사용되는 생성자입니다. HighScoreScreen.java 등 생성자 쓰이는 부분 모두 반영되면 해당 생성자를 삭제할 것을 요망합니다.
-	public Score(final String name, final int score) {
-		this.name = name;
+	public Score(final int stage, final int score) {
+		this.stage = stage;
 		this.score = score;
 	}
 
-
-	/**
-	 * Getter for the player's name.
-	 *
-	 * @return Name of the player.
-	 */
-	public final String getName() {
-		return this.name;
-	}
 
 	/**
 	 * Getter for the player's score.
