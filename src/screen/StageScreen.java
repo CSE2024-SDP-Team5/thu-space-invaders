@@ -54,7 +54,9 @@ public class StageScreen extends Screen {
      * Draws the elements associated with the screen.
      */
     private void draw(){
-
+        drawManager.initDrawing(this);
+        drawManager.drawStoryMap(this);
+        drawManager.completeDrawing(this);
     }
 
 }
