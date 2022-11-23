@@ -1,0 +1,42 @@
+*1
+6
+1/0/kor:때는 바야흐로 4077년 겨울, 외부 은하계의 침입으로 인해 인류의 안전이 위협 받기 시작하였다.
+1/0/eng:It was the winter of 4077, when the safety of our galaxy began to be threatened due to the invasion of the outer galaxy.
+2/0/kor:인류가 계속해서 외부 은하로 발사한 주파수와 행성 탐사 행동들이 외계 생물체의 심기를 건든 듯 보였다.
+2/0/eng:It seemed that humanity's planetary exploration activities had called upon the aliens.
+3/0/kor:하지만, 이에 굴복하지 않는 지구는 Space-Invader라는 이름의 부대를 결성하여 반격을 시작하였다.
+3/0/eng:However, to counter this, a unit named Space-Invader was formed and launched a counterattack.
+4/0/kor:그렇게 Space-Invader 부대 2중대 1소대장 중사 관우는 출격에 나서게 되는데..
+4/0/eng:Space-Invader Unit 2nd Company 1st Platoon Commander Sergeant Gwan-woo goes on a battlefield...
+5/1/kor:출격 전에 배운 내용을 상기해보면, 방향키 왼/오른쪽 버튼으로 움직이고 Spacebar로 총을 발사했었어.
+5/1/eng:As far as I remember, I moved with the left/right arrow keys and fired with the spacebar.
+6/1/kor:적을 모두 물리치자.
+6/1/eng:Let's defeat all enemies.
+*2
+1
+1/1/kor:점점 적이 많아진다. 적을 빠르게 섬멸하자.
+1/1/eng:Enemies are getting more and more. Let's kill the enemy quickly.
+*3
+1
+1/1/kor:점점 적이 많아진다. 적을 빠르게 섬멸하자.
+1/1/eng:Enemies are getting more and more. Let's kill the enemy quickly.
+*4
+1
+1/1/kor:점점 적이 많아진다. 적을 빠르게 섬멸하자.
+1/1/eng:Enemies are getting more and more. Let's kill the enemy quickly.
+*5
+1
+1/1/kor:점점 적이 많아진다. 적을 빠르게 섬멸하자.
+1/1/eng:Enemies are getting more and more. Let's kill the enemy quickly.
+*6
+1
+1/1/kor:점점 적이 많아진다. 적을 빠르게 섬멸하자.
+1/1/eng:Enemies are getting more and more. Let's kill the enemy quickly.
+*7
+1
+1/1/kor:점점 적이 많아진다. 적을 빠르게 섬멸하자.
+1/1/eng:Enemies are getting more and more. Let's kill the enemy quickly.
+*8
+1
+1/1/kor:스테이지1 보스 등장이다. 적을 빠르게 섬멸하자.
+1/1/eng:The stage 1 boss has appeared. Let's quickly annihilate the enemy.
