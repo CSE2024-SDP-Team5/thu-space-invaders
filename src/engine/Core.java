@@ -1,5 +1,6 @@
 package engine;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.ConsoleHandler;
@@ -243,8 +244,17 @@ public final class Core {
 				LOGGER.info("Closing title screen.");
 				break;
 			case 2:
-				//level
-				currentScreen = new LevelScreen(width, height, FPS);
+				//Stage
+				List<Score> highScores;
+				int result_stage;
+				try{                            //load stage
+					highScores = getFileManager().loadHighScores();
+					result_stage = highScores.get(highScores.size() - 1).getStage();
+				} catch (IOException e){
+					//If the player doesn't clear any stages, it returns stage 1
+					result_stage = 1;
+				}
+				currentScreen = new StageScreen(width, height, FPS, result_stage);
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 						+ " setting screen at " + FPS + " fps.");
 				returnCode = frame.setScreen(currentScreen);
@@ -253,7 +263,6 @@ public final class Core {
 
 				case 101:
 					// Game & score
-
 					Scanner sc = new Scanner(System.in);
 					LOGGER.info("Select your difficulty 0 is practice, 1 is easy, 2 is normal, 3 is hard");
 					diff = sc.nextInt();
