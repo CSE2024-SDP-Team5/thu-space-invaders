@@ -446,6 +446,21 @@ public final class DrawManager {
 	 *
 	 * @param screen Screen to draw on.
 	 */
+	public void drawStoryMap(final Screen screen){
+
+		//Stage 1 + 뒤로가기 선택 설명
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.drawString("SELECT: SPACE", 10, 25);
+		backBufferGraphics.drawString("RETURN: ESCAPE", 10, 45);
+		drawCenteredBigString(screen, "Stage1", 40);
+		backBufferGraphics.drawLine(0, 60, 520, 60);
+		//밑 상태창
+		backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.drawRect(31, 370, backBuffer.getWidth() - 62, backBuffer.getHeight() - 415);
+	}
+
+
 	public void drawTitle(final Screen screen) {
 		String titleString = "Invaders";
 		String instructionsString = "select with w+s / arrows, confirm with space";
