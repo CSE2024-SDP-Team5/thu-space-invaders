@@ -142,17 +142,15 @@ public final class FileManager {
 			reader = new BufferedReader(new InputStreamReader(inputStream));
 
 			Score highScore = null;
-			String name = reader.readLine();
 			String score = reader.readLine();
 			String stage = reader.readLine();
 			String killed = reader.readLine();
 			String bullets = reader.readLine();
 			String accuracy = reader.readLine();
 
-			while ((name != null) && (score != null) && (stage != null) && (killed != null) && (bullets != null) && (accuracy != null)) {
-				highScore = new Score(name, Integer.parseInt(score), Integer.parseInt(stage), Integer.parseInt(killed), Integer.parseInt(bullets), Float.parseFloat(accuracy));
+			while ((score != null) && (stage != null) && (killed != null) && (bullets != null) && (accuracy != null)) {
+				highScore = new Score(Integer.parseInt(score), Integer.parseInt(stage), Integer.parseInt(killed), Integer.parseInt(bullets), Float.parseFloat(accuracy));
 				highScores.add(highScore);
-				name = reader.readLine();
 				score = reader.readLine();
 				stage = reader.readLine();
 				killed = reader.readLine();
@@ -199,17 +197,15 @@ public final class FileManager {
 			logger.info("Loading user high scores.");
 
 			Score highScore = null;
-			String name = bufferedReader.readLine();
 			String score = bufferedReader.readLine();
 			String stage = bufferedReader.readLine();
 			String killed = bufferedReader.readLine();
 			String bullets = bufferedReader.readLine();
 			String accuracy = bufferedReader.readLine();
 
-			while ((name != null) && (score != null) && (stage != null) && (killed != null) && (bullets != null) && (accuracy != null)) {
-				highScore = new Score(name, Integer.parseInt(score), Integer.parseInt(stage), Integer.parseInt(killed), Integer.parseInt(bullets), Float.parseFloat(accuracy));
+			while ((score != null) && (stage != null) && (killed != null) && (bullets != null) && (accuracy != null)) {
+				highScore = new Score(Integer.parseInt(score), Integer.parseInt(stage), Integer.parseInt(killed), Integer.parseInt(bullets), Float.parseFloat(accuracy));
 				highScores.add(highScore);
-				name = bufferedReader.readLine();
 				score = bufferedReader.readLine();
 				stage = bufferedReader.readLine();
 				killed = bufferedReader.readLine();
@@ -268,8 +264,6 @@ public final class FileManager {
 			for (Score score : highScores) {
 				if (savedCount >= MAX_SCORES)
 					break;
-				bufferedWriter.write(score.getName());	// name
-				bufferedWriter.newLine();
 				bufferedWriter.write(Integer.toString(score.getScore()));	// score
 				bufferedWriter.newLine();
 				bufferedWriter.write(Integer.toString(score.getStage()));	// stage
