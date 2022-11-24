@@ -446,6 +446,68 @@ public final class DrawManager {
 	 *
 	 * @param screen Screen to draw on.
 	 */
+	public void drawStoryMap_Basic(final Screen screen){
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.drawString("SELECT: SPACE", 10, 25);
+		backBufferGraphics.drawString("RETURN: ESCAPE", 10, 45);
+		drawCenteredBigString(screen, "Stage1", 40);
+		backBufferGraphics.drawLine(0, 60, 520, 60);
+		backBufferGraphics.drawRect(31, 370, backBuffer.getWidth() - 62, backBuffer.getHeight() - 415);
+	}
+	public void drawStoryMap_Map(final Screen screen, int prog_stage){
+		int[] stage_x = {0,112,224,336,336,224,112,112,224};
+		int[] stage_y = {0,103,103,103,205,205,205,307,307};
+		for(int i = 1; i < prog_stage+1; i++){ //complete stages are orange color
+			if(i == 8){
+				backBufferGraphics.setColor(Color.MAGENTA);
+				backBufferGraphics.drawOval(stage_x[i]-10,stage_y[i]-10,40,40);
+				backBufferGraphics.fillOval(stage_x[i]-10,stage_y[i]-10,40,40);
+				break;
+			}
+			backBufferGraphics.setColor(Color.orange);
+			backBufferGraphics.drawOval(stage_x[i],stage_y[i],20,20);
+			backBufferGraphics.fillOval(stage_x[i],stage_y[i],20,20);
+		}
+		for(int i=prog_stage+1;i<9;i++){ //no complete stages are gray color
+			backBufferGraphics.setColor(Color.GRAY);
+			if(i == 8){
+				backBufferGraphics.drawOval(stage_x[i]-10,stage_y[i]-10,40,40);
+				backBufferGraphics.fillOval(stage_x[i]-10,stage_y[i]-10,40,40);
+				break;
+			}
+			backBufferGraphics.drawOval(stage_x[i],stage_y[i],20,20);
+			backBufferGraphics.fillOval(stage_x[i],stage_y[i],20,20);
+		}
+		backBufferGraphics.setColor(Color.GRAY);
+		backBufferGraphics.drawLine(stage_x[1]+20,stage_y[1]+10,stage_x[2],stage_y[2]+10);
+		backBufferGraphics.drawLine(stage_x[2]+20,stage_y[2]+10,stage_x[3],stage_y[3]+10);
+		backBufferGraphics.drawLine(stage_x[3]+10,stage_y[3]+20,stage_x[4]+10,stage_y[4]);
+		backBufferGraphics.drawLine(stage_x[4],stage_y[4]+10,stage_x[5]+20,stage_y[5]+10);
+		backBufferGraphics.drawLine(stage_x[5],stage_y[5]+10,stage_x[6]+20,stage_y[6]+10);
+		backBufferGraphics.drawLine(stage_x[6]+10,stage_y[6]+20,stage_x[7]+10,stage_y[7]);
+		backBufferGraphics.drawLine(stage_x[7]+20,stage_y[7]+10,stage_x[8]-10,stage_y[8]+10);
+	}
+	public void drawStoryMap_Control(final Screen screen, int stage_status){
+		int[] stage_x = {0,112,224,336,336,224,112,112,224};
+		int[] stage_y = {0,103,103,103,205,205,205,307,307};
+		for(int i=1 ; i < 9 ; i++){
+			if(i == stage_status){ // stage가 선택 될 경우 해당 그것만 초록색 받음
+				backBufferGraphics.setColor(Color.GREEN);
+				if(i<8){
+					backBufferGraphics.drawOval(stage_x[i],stage_y[i],20,20);
+					backBufferGraphics.fillOval(stage_x[i],stage_y[i],20,20);
+				}
+				else{
+					backBufferGraphics.drawOval(stage_x[i],stage_y[i],20,20);
+					backBufferGraphics.fillOval(stage_x[i],stage_y[i],20,20);
+				}
+				backBufferGraphics.setColor(Color.white);
+				backBufferGraphics.drawString("1-" + Integer.toString(i),35,395);
+			}
+		}
+	}
+
 	public void drawTitle(final Screen screen) {
 		String titleString = "Invaders";
 		String instructionsString = "select with w+s / arrows, confirm with space";
