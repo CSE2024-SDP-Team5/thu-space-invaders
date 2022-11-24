@@ -276,11 +276,7 @@ public class BossScreen extends Screen {
         }
 
         manageCollisions();
-        manageCollisionsN();
-        manageCollisionsH();
         cleanBullets();
-        cleanBulletsN();
-        cleanBulletsH();
         manageCollisionsItem();
         cleanItems();
         draw();
@@ -373,29 +369,7 @@ public class BossScreen extends Screen {
         BulletPool.recycle(recyclable);
     }
 
-    private void cleanBulletsN() {
-        Set<BulletN> recyclable = new HashSet<BulletN>();
-        for (BulletN bulletN : this.bulletsN) {
-            bulletN.update();
-            if (bulletN.getPositionY() < SEPARATION_LINE_HEIGHT
-                    || bulletN.getPositionY() > this.height)
-                recyclable.add(bulletN);
-        }
-        this.bulletsN.removeAll(recyclable);
-        BulletPool.recycleN(recyclable);
-    }
 
-    private void cleanBulletsH() {
-        Set<BulletH> recyclable = new HashSet<BulletH>();
-        for (BulletH bulletH : this.bulletsH) {
-            bulletH.update();
-            if (bulletH.getPositionY() < SEPARATION_LINE_HEIGHT
-                    || bulletH.getPositionY() > this.height)
-                recyclable.add(bulletH);
-        }
-        this.bulletsH.removeAll(recyclable);
-        BulletPool.recycleH(recyclable);
-    }
 
     private void cleanItems() {
         Set<entity.Item> recyclable = new HashSet<entity.Item>();
@@ -464,100 +438,6 @@ public class BossScreen extends Screen {
             }
         this.bullets.removeAll(recyclable);
         BulletPool.recycle(recyclable);
-    }
-
-    private void manageCollisionsN() {
-        Set<BulletN> recyclable = new HashSet<BulletN>();
-        for (BulletN bullet : this.bulletsN)
-            if (bullet.getSpeed() > 0) {
-                if (checkCollision(bullet, this.ship) && !this.levelFinished) {
-                    recyclable.add(bullet);
-                    if (!this.ship.isDestroyed()) {
-                        this.ship.destroy();
-                        this.lives--;
-                        this.logger.info("Hit on player ship, " + this.lives
-                                + " lives remaining.");
-                    }
-                }
-            } else {
-                for (EnemyShip enemyShip : this.enemyShipFormation)
-                    if (!enemyShip.isDestroyed()
-                            && checkCollision(bullet, enemyShip)) {
-                        this.score += enemyShip.getPointValue();
-                        this.shipsDestroyed++;
-                        Random random = new Random();
-                        int per = random.nextInt(2);
-                        if(per == 0){
-                            items.add(ItemPool.getItem(enemyShip.getPositionX() + enemyShip.getWidth() / 2,
-                                    enemyShip.getPositionY(), ITEM_SPEED));
-                        }
-                        this.enemyShipFormation.destroy(enemyShip);
-                        recyclable.add(bullet);
-                    }
-                if (this.enemyShipSpecial != null
-                        && !this.enemyShipSpecial.isDestroyed()
-                        && checkCollision(bullet, this.enemyShipSpecial)) {
-                    this.score += this.enemyShipSpecial.getPointValue();
-                    this.shipsDestroyed++;
-                    this.enemyShipSpecial.destroy();
-                    this.enemyShipSpecialExplosionCooldown.reset();
-                    recyclable.add(bullet);
-                }
-            }
-        this.bullets.removeAll(recyclable);
-        BulletPool.recycleN(recyclable);
-    }
-
-    private void manageCollisionsH() {
-        Set<BulletH> recyclable = new HashSet<BulletH>();
-        for (BulletH bullet : this.bulletsH)
-            if (bullet.getSpeed() > 0) {
-                if (checkCollision(bullet, this.ship) && !this.levelFinished) {
-                    recyclable.add(bullet);
-                    if (!this.ship.isDestroyed()) {
-                        this.ship.destroy();
-                        this.lives--;
-                        this.logger.info("Hit on player ship, " + this.lives
-                                + " lives remaining.");
-                    }
-                }
-            } else {
-                for (EnemyShip enemyShip : this.enemyShipFormation)
-                    if (!enemyShip.isDestroyed()
-                            && checkCollision(bullet, enemyShip)) {
-                        this.score += enemyShip.getPointValue();
-                        this.shipsDestroyed++;
-                        Random random = new Random();
-                        int per = random.nextInt(2);
-                        if (per == 0) {
-                            items.add(ItemPool.getItem(enemyShip.getPositionX() + enemyShip.getWidth() / 2,
-                                    enemyShip.getPositionY(), ITEM_SPEED));
-                        }
-                        this.enemyShipFormation.destroy(enemyShip);
-                        recyclable.add(bullet);
-                    }
-                if (this.enemyShipSpecial != null
-                        && !this.enemyShipSpecial.isDestroyed()
-                        && checkCollision(bullet, this.enemyShipSpecial)) {
-                    this.score += this.enemyShipSpecial.getPointValue();
-                    this.shipsDestroyed++;
-                    this.enemyShipSpecial.destroy();
-                    this.enemyShipSpecialExplosionCooldown.reset();
-                    recyclable.add(bullet);
-                }
-            }
-        this.bullets.removeAll(recyclable);
-        BulletPool.recycleH(recyclable);
-    }
-
-    /**
-     * Returns a GameState object representing the status of the game.
-     *
-     * @return Current game state.
-     */
-    public final GameState getGameState() {
-        return new GameState(this.level, this.score, this.lives,
-                this.bulletsShot, this.shipsDestroyed, this.coin);
     }
 
     /**
