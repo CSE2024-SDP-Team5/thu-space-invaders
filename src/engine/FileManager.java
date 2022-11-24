@@ -4,17 +4,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.URLDecoder;
 import java.nio.Buffer;
 import java.nio.charset.Charset;
@@ -314,5 +304,65 @@ public BufferedImage loadImage(String name) throws IOException{
 				inputStream.close();
 		}
 		return ret;
+	}
+
+	/**
+	 * Get scenario list for selected stage
+	 * @param stage
+	 * @return List of Scenario that have the information of korean lines, english lines, and speaker
+	 */
+	public Scenario[] loadScenario(int chapter, int stage) throws IOException {
+		Scenario[] scenarios = null;
+		InputStream inputStream = null;
+
+		try {
+			// Scenario loading.
+			inputStream = FileManager.class.getClassLoader()
+					.getResourceAsStream("scenario" + chapter + ".txt");
+
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+			String line;
+			boolean bStage = false;
+
+			while((line = bufferedReader.readLine()) != null) {
+				// if the first line with star is same to chapter that we find
+				if(line.contains("*")) {
+					if(line.substring(1).equals(Integer.toString(stage))) {
+						bStage = true;
+						line = bufferedReader.readLine();
+						int length = Integer.parseInt(line);
+						scenarios = new Scenario[length];
+						for(int i = 0; i < length; i++) {
+							scenarios[i] = new Scenario();
+						}
+					} else {
+						bStage = false;
+					}
+				} else {
+					// if bStage is true, you can load the script of selected stage.
+					if(bStage) {
+						String datas[] = line.split(":");
+						String index_datas[] = datas[0].split("/");
+						String line_data = datas[1];
+
+						int index = Integer.parseInt(index_datas[0]) - 1;
+						int speaker = Integer.parseInt(index_datas[1]);
+						String lang = index_datas[2];
+
+						scenarios[index].setSpeaker(speaker);
+						if(lang.equals("kor")) {
+							scenarios[index].setKoreanLine(line_data);
+						} else if(lang.equals("eng")) {
+							scenarios[index].setEnglishLine(line_data);
+						}
+					}
+				}
+			}
+		} finally {
+			if (inputStream != null)
+				inputStream.close();
+		}
+
+		return scenarios;
 	}
 }
