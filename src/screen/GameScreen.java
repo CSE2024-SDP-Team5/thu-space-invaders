@@ -200,6 +200,7 @@ public class GameScreen extends Screen {
 		this.inputDelay.reset();
 	}
 
+
 	/**
 	 * Starts the action.
 	 *
