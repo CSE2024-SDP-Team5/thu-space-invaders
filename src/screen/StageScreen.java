@@ -110,7 +110,9 @@ public class StageScreen extends Screen {
      */
     private void draw(){
         drawManager.initDrawing(this);
-        drawManager.drawStoryMap(this, stage_status, prog_stage);
+        drawManager.drawStoryMap_Basic(this);
+        drawManager.drawStoryMap_Map(this, prog_stage);
+        drawManager.drawStoryMap_Control(this,stage_status);
         drawManager.completeDrawing(this);
     }
 
