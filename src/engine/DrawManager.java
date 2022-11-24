@@ -511,6 +511,12 @@ public final class DrawManager {
 		}
 	}
 
+	public void drawScenario (final Screen screen, Scenario scenario){
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.drawString(scenario.getEnglishLine(), 35, 395);
+	}
+
 	public void drawTitle(final Screen screen) {
 		String titleString = "Invaders";
 		String instructionsString = "select with w+s / arrows, confirm with space";
