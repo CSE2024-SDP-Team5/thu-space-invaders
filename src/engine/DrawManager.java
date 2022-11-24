@@ -164,7 +164,9 @@ public final class DrawManager {
 		/** dropped item */
 		Item,
 		/** Current Ship Lives */
-		ShipLive;
+		ShipLive,
+		/** Boss*/
+		boss;
 	};
 
 	/**
@@ -196,6 +198,7 @@ public final class DrawManager {
 			spriteMap.put(SpriteType.Explosion4, new boolean[13][9]);
 			spriteMap.put(SpriteType.Item, new boolean[9][8]);
 			spriteMap.put(SpriteType.ShipLive, new boolean[13][8]);
+			spriteMap.put(SpriteType.boss, new boolean[21][32]);
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");
 
