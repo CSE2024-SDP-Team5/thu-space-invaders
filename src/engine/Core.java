@@ -117,6 +117,11 @@ public final class Core {
 	private static final GameSettings SETTINGS_LEVEL_5_H = new GameSettings(10, 6, 1, 600);
 
 	/**
+	 * Difficulty settings for boss.
+	 */
+	private static final GameSettings boss = new GameSettings(1, 1, 5, 600);
+
+	/**
 	 * Frame to draw the screen on.
 	 */
 	private static Frame frame;
