@@ -26,9 +26,9 @@ import static screen.ShopScreen.selecteditem;
 
 /**
  * Manages screen drawing.
- * 
+ *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ *
  */
 public final class DrawManager {
 
@@ -164,7 +164,9 @@ public final class DrawManager {
 		/** dropped item */
 		Item,
 		/** Current Ship Lives */
-		ShipLive;
+		ShipLive,
+		/** Boss*/
+		boss;
 	};
 
 	/**
@@ -196,6 +198,7 @@ public final class DrawManager {
 			spriteMap.put(SpriteType.Explosion4, new boolean[13][9]);
 			spriteMap.put(SpriteType.Item, new boolean[9][8]);
 			spriteMap.put(SpriteType.ShipLive, new boolean[13][8]);
+			spriteMap.put(SpriteType.boss, new boolean[21][32]);
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");
 
@@ -361,36 +364,36 @@ public final class DrawManager {
       	String scoreString = String.format("%04d", score);
       	backBufferGraphics.drawString(scoreString, screen.getWidth() - 60, 25);
       	*/
-      	backBufferGraphics.setFont(fontRegular);
-      	backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.setColor(Color.WHITE);
 
-      	String scoreString = "";
+		String scoreString = "";
 
-      	//implementation of logic
-      	fileManager = Core.getFileManager();
-      	List<Score> highScores;
-      	try {
-         	highScores = fileManager.loadHighScores();
-         	int max = -1;
-      		for(int i = 0; i < highScores.size(); i++) {
-         		if(max < highScores.get(i).getScore()) {
-            		max = highScores.get(i).getScore();
-         		}
-      		}
+		//implementation of logic
+		fileManager = Core.getFileManager();
+		List<Score> highScores;
+		try {
+			highScores = fileManager.loadHighScores();
+			int max = -1;
+			for(int i = 0; i < highScores.size(); i++) {
+				if(max < highScores.get(i).getScore()) {
+					max = highScores.get(i).getScore();
+				}
+			}
 
-    		if(max < score) {
-         		scoreString = "new score : ";
-         		scoreString += String.format("%04d", score);
-      		}
-      		else {
-         		scoreString = "score : ";
-        		scoreString += String.format("%04d", score);
-    		}
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	}
-      
-    	backBufferGraphics.drawString(scoreString, screen.getWidth() - 167, 25);
+			if(max < score) {
+				scoreString = "new score : ";
+				scoreString += String.format("%04d", score);
+			}
+			else {
+				scoreString = "score : ";
+				scoreString += String.format("%04d", score);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		backBufferGraphics.drawString(scoreString, screen.getWidth() - 167, 25);
 	}
 
 	public void drawCoin(final Screen screen, final int coin) {
@@ -410,16 +413,16 @@ public final class DrawManager {
 	public void drawLives(final Screen screen, final int lives) {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
-		
+
 		Ship dummyShip = null;
 		switch (Inventory.getcurrentship()) {
 			case 1000 -> dummyShip = new Ship(0, 0, Color.GREEN);
 			case 1001 -> dummyShip = new Ship(0, 0, Color.RED);
 			case 1002 -> dummyShip = new Ship(0, 0, Color.BLUE);
 		}
-		
+
 		if(lives == -99) {
-			backBufferGraphics.drawString("Infin.", 20, 25);	
+			backBufferGraphics.drawString("Infin.", 20, 25);
 			drawEntity(dummyShip, 40 + 35, 10);
 		} else {
 			backBufferGraphics.drawString(Integer.toString(lives), 20, 25);
@@ -446,6 +449,74 @@ public final class DrawManager {
 	 *
 	 * @param screen Screen to draw on.
 	 */
+	public void drawStoryMap_Basic(final Screen screen){
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.drawString("SELECT: SPACE", 10, 25);
+		backBufferGraphics.drawString("RETURN: ESCAPE", 10, 45);
+		drawCenteredBigString(screen, "Stage1", 40);
+		backBufferGraphics.drawLine(0, 60, 520, 60);
+		backBufferGraphics.drawRect(31, 370, backBuffer.getWidth() - 62, backBuffer.getHeight() - 415);
+	}
+	public void drawStoryMap_Map(final Screen screen, int prog_stage){
+		int[] stage_x = {0,112,224,336,336,224,112,112,224};
+		int[] stage_y = {0,103,103,103,205,205,205,307,307};
+		for(int i = 1; i < prog_stage+1; i++){ //complete stages are orange color
+			if(i == 8){
+				backBufferGraphics.setColor(Color.MAGENTA);
+				backBufferGraphics.drawOval(stage_x[i]-10,stage_y[i]-10,40,40);
+				backBufferGraphics.fillOval(stage_x[i]-10,stage_y[i]-10,40,40);
+				break;
+			}
+			backBufferGraphics.setColor(Color.orange);
+			backBufferGraphics.drawOval(stage_x[i],stage_y[i],20,20);
+			backBufferGraphics.fillOval(stage_x[i],stage_y[i],20,20);
+		}
+		for(int i=prog_stage+1;i<9;i++){ //no complete stages are gray color
+			backBufferGraphics.setColor(Color.GRAY);
+			if(i == 8){
+				backBufferGraphics.drawOval(stage_x[i]-10,stage_y[i]-10,40,40);
+				backBufferGraphics.fillOval(stage_x[i]-10,stage_y[i]-10,40,40);
+				break;
+			}
+			backBufferGraphics.drawOval(stage_x[i],stage_y[i],20,20);
+			backBufferGraphics.fillOval(stage_x[i],stage_y[i],20,20);
+		}
+		backBufferGraphics.setColor(Color.GRAY);
+		backBufferGraphics.drawLine(stage_x[1]+20,stage_y[1]+10,stage_x[2],stage_y[2]+10);
+		backBufferGraphics.drawLine(stage_x[2]+20,stage_y[2]+10,stage_x[3],stage_y[3]+10);
+		backBufferGraphics.drawLine(stage_x[3]+10,stage_y[3]+20,stage_x[4]+10,stage_y[4]);
+		backBufferGraphics.drawLine(stage_x[4],stage_y[4]+10,stage_x[5]+20,stage_y[5]+10);
+		backBufferGraphics.drawLine(stage_x[5],stage_y[5]+10,stage_x[6]+20,stage_y[6]+10);
+		backBufferGraphics.drawLine(stage_x[6]+10,stage_y[6]+20,stage_x[7]+10,stage_y[7]);
+		backBufferGraphics.drawLine(stage_x[7]+20,stage_y[7]+10,stage_x[8]-10,stage_y[8]+10);
+	}
+	public void drawStoryMap_Control(final Screen screen, int stage_status){
+		int[] stage_x = {0,112,224,336,336,224,112,112,224};
+		int[] stage_y = {0,103,103,103,205,205,205,307,307};
+		for(int i=1 ; i < 9 ; i++){
+			if(i == stage_status){ // stage가 선택 될 경우 해당 그것만 초록색 받음
+				backBufferGraphics.setColor(Color.GREEN);
+				if(i<8){
+					backBufferGraphics.drawOval(stage_x[i],stage_y[i],20,20);
+					backBufferGraphics.fillOval(stage_x[i],stage_y[i],20,20);
+				}
+				else{
+					backBufferGraphics.drawOval(stage_x[i],stage_y[i],20,20);
+					backBufferGraphics.fillOval(stage_x[i],stage_y[i],20,20);
+				}
+				backBufferGraphics.setColor(Color.white);
+				backBufferGraphics.drawString("1-" + Integer.toString(i),35,395);
+			}
+		}
+	}
+
+	public void drawScenario (final Screen screen, Scenario scenario){
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.drawString(scenario.getEnglishLine(), 35, 395);
+	}
+
 	public void drawTitle(final Screen screen) {
 		String titleString = "Invaders";
 		String instructionsString = "select with w+s / arrows, confirm with space";
@@ -746,10 +817,13 @@ public final class DrawManager {
 	 * @param name             Current name selected.
 	 * @param nameCharSelected Current character selected for modification.
 	 */
-	public void drawNameInput(final Screen screen, final char[] name,
-							  final int nameCharSelected) {
+	public void drawStageInput(final Screen screen, final int stage,
+							   final int nameCharSelected) {
 		String newRecordString = "New Record!";
-		String introduceNameString = "Introduce name:";
+		backBufferGraphics.setColor(HUDSettingScreen.getScreenColor());
+		drawCenteredRegularString(screen, newRecordString, screen.getHeight() / 4 + fontRegularMetrics.getHeight() * 10);
+
+		/*String introduceNameString = "Introduce name:";
 
 		backBufferGraphics.setColor(HUDSettingScreen.getScreenColor());
 		drawCenteredRegularString(screen, newRecordString, screen.getHeight()
@@ -782,7 +856,7 @@ public final class DrawManager {
 					positionX,
 					screen.getHeight() / 4 + fontRegularMetrics.getHeight()
 							* 14);
-		}
+		}*/
 	}
 
 	/**
@@ -829,24 +903,22 @@ public final class DrawManager {
 	}
 
 	public void drawHighScores_submenu(final Screen screen) {
-		String name = "Name";
+		String stage = "Stage";
 		String score = "Score";
 		String killed = "Killed";
 		String bullet = "Bullets";
 		String accuracy = "Accuracy";
-		String stage = "Stage";
 
 		backBufferGraphics.setColor(Color.gray);
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.fillRect(0, 105, 450, 35);
 
 		backBufferGraphics.setColor(Color.red);
-		backBufferGraphics.drawString(name, 13, 105 + 24);
-		backBufferGraphics.drawString(score, 63, 129);
-		backBufferGraphics.drawString(killed, 128, 129);
-		backBufferGraphics.drawString(bullet, 203, 129);
-		backBufferGraphics.drawString(accuracy, 290, 129);
-		backBufferGraphics.drawString(stage, 388, 129);
+		backBufferGraphics.drawString(stage, 10, 129);
+		backBufferGraphics.drawString(score, 85, 129);
+		backBufferGraphics.drawString(killed, 160, 129);
+		backBufferGraphics.drawString(bullet, 245, 129);
+		backBufferGraphics.drawString(accuracy, 340, 129);
 
 	}
 
@@ -860,17 +932,15 @@ public final class DrawManager {
 							   final List<Score> highScores) {
 		backBufferGraphics.setColor(Color.WHITE);
 		int i = 0;
-		String nameString = "";
 		String scoreString = "";
 		String killedString = "";
 		String bulletString = "";
 		String accuracyString = "";
 		String stageString = "";
 		for (Score score : highScores) {
-			scoreString = String.format("%s    %04d    %04d           %04d           %02.02f            %d   ",
-					score.getName(),
-					score.getScore(), score.getKilled(), score.getBullets(), score.getAccuracy(),
-					score.getStage()); // need change 5th variables and score.getStage()
+			scoreString = String.format("%d            %04d          %04d          %04d             %02.02f  ",
+					score.getStage(), score.getScore(), score.getKilled(), score.getBullets(),
+					score.getAccuracy()); // need change 5th variables and score.getStage()
 			drawCenteredRegularString(screen, scoreString, screen.getHeight()
 					/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
 			i++;
@@ -1135,7 +1205,7 @@ public final class DrawManager {
 	}
 
 	public void drawShopModal(Screen screen, String item_name, String item_price, engine.DrawManager.shopmodaltype mode,
-			int modaloption) {
+							  int modaloption) {
 		int winw = backBuffer.getWidth() * 8 / 10;
 		int winh = backBuffer.getHeight() * 8 / 10;
 		int winxbase = (backBuffer.getWidth() - winw) / 2;
@@ -1281,6 +1351,24 @@ public final class DrawManager {
 		backBufferGraphics.drawString(stage4, 330, 340);
 		backBufferGraphics.drawString(stage5, 390, 340);
 
+	}
+	public void drawCountDownBoss(final Screen screen,  final int number) {
+		int rectWidth = screen.getWidth();
+		int rectHeight = screen.getHeight() / 6;
+		backBufferGraphics.setColor(Color.BLACK);
+		backBufferGraphics.fillRect(0, screen.getHeight() / 2 - rectHeight / 2,
+				rectWidth, rectHeight);
+		backBufferGraphics.setColor(HUDSettingScreen.getScreenColor());
+		if (number >= 4)
+			drawCenteredBigString(screen, "Boss ",
+					screen.getHeight() / 2
+							+ fontBigMetrics.getHeight() / 3);
+		else if (number != 0)
+			drawCenteredBigString(screen, Integer.toString(number),
+					screen.getHeight() / 2 + fontBigMetrics.getHeight() / 3);
+		else
+			drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
+					+ fontBigMetrics.getHeight() / 3);
 	}
 }
 
