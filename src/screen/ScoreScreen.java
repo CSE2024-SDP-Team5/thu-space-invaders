@@ -42,7 +42,7 @@ public class ScoreScreen extends Screen {
 	/** Player name for record input. */
 	private char[] name;
 	/** Character of players name selected for change. */
-	private int nameCharSelected;
+	private int stageIntSelected;
 	/** Time between changes in user selection. */
 	private Cooldown selectionCooldown;
 	/** shot accuracy */
@@ -73,16 +73,25 @@ public class ScoreScreen extends Screen {
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 		this.isNewRecord = false;
 		this.name = "AAA".toCharArray();
-		this.nameCharSelected = 0;
+		this.stageIntSelected = 0;
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
 		this.selectionCooldown.reset();
 
 		try {
+			/*
 			this.highScores = Core.getFileManager().loadHighScores();
 			if (highScores.size() < MAX_HIGH_SCORE_NUM
 					|| highScores.get(highScores.size() - 1).getScore()
 					< this.score)
 				this.isNewRecord = true;
+			 */
+			this.highScores = Core.getFileManager().loadHighScores();
+			Score newScore = new Score(this.stage, this.score, this.shipsDestroyed, this.bulletsShot, this.accuracy);
+			List<Score> newScores = Score.UpdateScore(highScores, newScore);
+
+			if(newScores != null) {
+				this.isNewRecord = true;
+			}
 
 		} catch (IOException e) {
 			logger.warning("Couldn't load high scores!");
@@ -122,7 +131,7 @@ public class ScoreScreen extends Screen {
 					saveScore();
 			}
 
-			if (this.isNewRecord && this.selectionCooldown.checkFinished()) {
+			/*if (this.isNewRecord && this.selectionCooldown.checkFinished()) {
 				if (inputManager.isKeyDown(KeyEvent.VK_RIGHT)) {
 					this.nameCharSelected = this.nameCharSelected == 2 ? 0
 							: this.nameCharSelected + 1;
@@ -147,7 +156,7 @@ public class ScoreScreen extends Screen {
 									: this.name[this.nameCharSelected] - 1);
 					this.selectionCooldown.reset();
 				}
-			}
+			}*/
 		}
 
 	}
@@ -156,12 +165,10 @@ public class ScoreScreen extends Screen {
 	 * Saves the score as a high score.
 	 */
 	private void saveScore() {
-		highScores.add(new Score(new String(this.name), score, this.stage, this.shipsDestroyed, this.bulletsShot, this.accuracy));
-		Collections.sort(highScores);
-		if (highScores.size() > MAX_HIGH_SCORE_NUM)
-			highScores.remove(highScores.size() - 1);
-
 		try {
+			this.highScores = Core.getFileManager().loadHighScores();
+			Score newScore = new Score(this.stage, this.score, this.shipsDestroyed, this.bulletsShot, this.accuracy);
+			highScores = Score.UpdateScore(highScores, newScore);
 			Core.getFileManager().saveHighScores(highScores);
 		} catch (IOException e) {
 			logger.warning("Couldn't load high scores!");
@@ -181,7 +188,7 @@ public class ScoreScreen extends Screen {
 						/ this.bulletsShot, this.isNewRecord);
 
 		if (this.isNewRecord)
-			drawManager.drawNameInput(this, this.name, this.nameCharSelected);
+			drawManager.drawStageInput(this, this.stage, this.stageIntSelected);
 
 		drawManager.completeDrawing(this);
 	}

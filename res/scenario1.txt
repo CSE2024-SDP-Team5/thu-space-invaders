@@ -1,0 +1,42 @@
+*1
+12
+1/0/eng:It was the winter of 4077, when the safety
+2/0/eng:of our galaxy began to be threatened
+3/0/eng:due to the invasion of the outer galaxy.
+4/0/eng:It seemed that humanity's planetary exploration
+5/0/eng:activities had called upon the aliens.
+6/0/eng:However, to counter this, a unit named
+7/0/eng:Space-Invader was formed and launched a counterattack.
+8/0/eng:Space-Invader Unit 2nd Company 1st Platoon Commander
+9/0/eng:Sergeant Gwan-woo goes on a battlefield...
+10/1/eng:As far as I remember, I moved with the
+11/1/eng:left/right arrow keys and fired with the spacebar.
+12/1/eng:Let's defeat all enemies.
+*2
+2
+1/1/eng:Enemies are getting more and more.
+2/1/eng:Let's kill the enemy quickly.
+*3
+2
+1/1/eng:Enemies are getting more and more.
+2/1/eng:Let's kill the enemy quickly.
+*4
+2
+1/1/eng:Enemies are getting more and more.
+2/1/eng:Let's kill the enemy quickly.
+*5
+2
+1/1/eng:Enemies are getting more and more.
+2/1/eng:Let's kill the enemy quickly.
+*6
+2
+1/1/eng:Enemies are getting more and more.
+2/1/eng:Let's kill the enemy quickly.
+*7
+2
+1/1/eng:Enemies are getting more and more.
+2/1/eng:Let's kill the enemy quickly.
+*8
+2
+1/1/eng:The stage 1 boss has appeared.
+2/1/eng:Let's quickly annihilate the enemy.

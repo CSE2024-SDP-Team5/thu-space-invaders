@@ -1,5 +1,6 @@
 package engine;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.ConsoleHandler;
@@ -7,6 +8,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.lang.Math;
 import java.util.Scanner;
 
 import entity.Ship;
@@ -57,63 +59,44 @@ public final class Core {
 	 * Total number of levels.
 	 */
 	private static final int NUM_LEVELS = 5;
+	/**
+	 * Total number of stages.
+	 */
+	private static final int NUM_STAGES = 8;
 
 	/**
-	 * Difficulty settings for level 1.
+	 * settings for level 1.
 	 */
-	private static final GameSettings SETTINGS_LEVEL_1_E = new GameSettings(5, 4, 58, 2000);
+	private static final GameSettings SETTINGS_LEVEL_1 = new GameSettings(5, 4, 58, 2000);
 	/**
-	 * Difficulty settings for level 2.
+	 * settings for level 2.
 	 */
-	private static final GameSettings SETTINGS_LEVEL_2_E = new GameSettings(5, 5, 54, 1900);
+	private static final GameSettings SETTINGS_LEVEL_2 = new GameSettings(6, 5, 50, 1800);
 	/**
-	 * Difficulty settings for level 3.
+	 * settings for level 3.
 	 */
-	private static final GameSettings SETTINGS_LEVEL_3_E = new GameSettings(6, 5, 50, 1800);
-	/**
-	 * Difficulty settings for level 4.
-	 */
-	private static final GameSettings SETTINGS_LEVEL_4_E = new GameSettings(6, 6, 46, 1700);
-	/**
-	 * Difficulty settings for level 5.
-	 */
-	private static final GameSettings SETTINGS_LEVEL_5_E = new GameSettings(7, 6, 42, 1600);
+	private static final GameSettings SETTINGS_LEVEL_3 = new GameSettings(7, 6, 42, 1600);
 	// NORMAL
-	private static final GameSettings SETTINGS_LEVEL_1_N = new GameSettings(6, 4, 38, 1500);
 	/**
-	 * Difficulty settings for level 2.
+	 * settings for level 4.
 	 */
-	private static final GameSettings SETTINGS_LEVEL_2_N = new GameSettings(6, 5, 34, 1400);
+	private static final GameSettings SETTINGS_LEVEL_4 = new GameSettings(6, 5, 34, 1400);
 	/**
-	 * Difficulty settings for level 3.
+	 * settings for level 5.
 	 */
-	private static final GameSettings SETTINGS_LEVEL_3_N = new GameSettings(7, 5, 30, 1300);
+	private static final GameSettings SETTINGS_LEVEL_5 = new GameSettings(8, 6, 26, 1200);
 	/**
-	 * Difficulty settings for level 4.
+	 * settings for level 6.
 	 */
-	private static final GameSettings SETTINGS_LEVEL_4_N = new GameSettings(8, 6, 26, 1200);
+	private static final GameSettings SETTINGS_LEVEL_6 = new GameSettings(6, 5, 18, 1000);
 	/**
-	 * Difficulty settings for level 5.
+	 * settings for level 7.
 	 */
-	private static final GameSettings SETTINGS_LEVEL_5_N = new GameSettings(9, 6, 22, 1100);
-	// HARD
-	private static final GameSettings SETTINGS_LEVEL_1_H = new GameSettings(6, 5, 18, 1000);
+	private static final GameSettings SETTINGS_LEVEL_7 = new GameSettings(8, 5, 9, 800);
 	/**
-	 * Difficulty settings for level 2.
+	 * settings for level 8.
 	 */
-	private static final GameSettings SETTINGS_LEVEL_2_H = new GameSettings(7, 5, 14, 900);
-	/**
-	 * Difficulty settings for level 3.
-	 */
-	private static final GameSettings SETTINGS_LEVEL_3_H = new GameSettings(8, 5, 9, 800);
-	/**
-	 * Difficulty settings for level 4.
-	 */
-	private static final GameSettings SETTINGS_LEVEL_4_H = new GameSettings(9, 6, 5, 700);
-	/**
-	 * Difficulty settings for level 5.
-	 */
-	private static final GameSettings SETTINGS_LEVEL_5_H = new GameSettings(10, 6, 1, 600);
+	private static final GameSettings SETTINGS_LEVEL_8 = new GameSettings(10, 6, 1, 600);
 
 	/**
 	 * Difficulty settings for boss.
@@ -213,31 +196,23 @@ public final class Core {
 		Item.itemregistry_bgm.add(Test6);
 
 		gameSettings = new ArrayList<GameSettings>();
-		gameSettings.add(SETTINGS_LEVEL_1_E);
-		gameSettings.add(SETTINGS_LEVEL_2_E);
-		gameSettings.add(SETTINGS_LEVEL_3_E);
-		gameSettings.add(SETTINGS_LEVEL_4_E);
-		gameSettings.add(SETTINGS_LEVEL_5_E);
-		gameSettings.add(SETTINGS_LEVEL_1_N);
-		gameSettings.add(SETTINGS_LEVEL_2_N);
-		gameSettings.add(SETTINGS_LEVEL_3_N);
-		gameSettings.add(SETTINGS_LEVEL_4_N);
-		gameSettings.add(SETTINGS_LEVEL_5_N);
-		gameSettings.add(SETTINGS_LEVEL_1_H);
-		gameSettings.add(SETTINGS_LEVEL_2_H);
-		gameSettings.add(SETTINGS_LEVEL_3_H);
-		gameSettings.add(SETTINGS_LEVEL_4_H);
-		gameSettings.add(SETTINGS_LEVEL_5_H);
+		gameSettings.add(SETTINGS_LEVEL_1);
+		gameSettings.add(SETTINGS_LEVEL_2);
+		gameSettings.add(SETTINGS_LEVEL_3);
+		gameSettings.add(SETTINGS_LEVEL_4);
+		gameSettings.add(SETTINGS_LEVEL_5);
+		gameSettings.add(SETTINGS_LEVEL_6);
+		gameSettings.add(SETTINGS_LEVEL_7);
+		gameSettings.add(SETTINGS_LEVEL_8);
 
 		GameState gameState;
 
 		int returnCode = 1;
-		do {
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, Coin.balance);
+			do {
+				gameState = new GameState(1, 0, MAX_LIVES, 0, 0, Coin.balance);
+			int result_stage = 1;
 
 			switch (returnCode) {
-
-
 
 			case 1:
 				// Main menu.
@@ -247,101 +222,81 @@ public final class Core {
 				returnCode = frame.setScreen(currentScreen);
 				LOGGER.info("Closing title screen.");
 				break;
+
 			case 2:
-				//level
-				currentScreen = new LevelScreen(width, height, FPS);
+				//Stage
+				List<Score> highScores;
+
+				try {
+					// load stage
+					highScores = getFileManager().loadHighScores();
+					result_stage = highScores.get(highScores.size() - 1).getStage() + 1;
+					// Exception Handling for result_stage (> NUM_STAGES)
+					if(result_stage > NUM_STAGES) result_stage--;
+				} catch (IOException e){
+					//If the player doesn't clear any stages, it returns stage 1
+					result_stage = 1;
+				}
+				currentScreen = new StageScreen(width, height, FPS, result_stage);
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 						+ " setting screen at " + FPS + " fps.");
 				returnCode = frame.setScreen(currentScreen);
 				LOGGER.info("Closing setting screen.");
 				break;
 
-				case 101:
-					// Game & score
+			case 101:
+				// Game & score
+				new Sound().backroundmusic();
 
-					Scanner sc = new Scanner(System.in);
-					LOGGER.info("Select your difficulty 0 is practice, 1 is easy, 2 is normal, 3 is hard");
-					diff = sc.nextInt();
-					while(diff < 0 || diff > 3){
-						new Sound().backroundmusic();
-						LOGGER.info("Select your difficulty 0 is practice, 1 is easy, 2 is normal, 3 is hard");
-						diff = sc.nextInt();
-					}
-					if(diff == 0) {
-						do {
-							// One extra live every few levels.
-							boolean bonusLife = gameState.getLevel()
-									% EXTRA_LIFE_FRECUENCY == 0
-									&& gameState.getLivesRemaining() < MAX_LIVES;
-
-							currentScreen = new PracticeScreen(gameState,
-									gameSettings.get(gameState.getLevel() - 1),
-									bonusLife, width, height, FPS);
-							LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-									+ " game screen at " + FPS + " fps.");
-							frame.setScreen(currentScreen);
-							LOGGER.info("Closing game screen.");
-
-							gameState = ((PracticeScreen) currentScreen).getGameState();
-
-							gameState = new GameState(gameState.getLevel() + 1,
-									gameState.getScore(),
-									gameState.getLivesRemaining(),
-									gameState.getBulletsShot(),
-									gameState.getShipsDestroyed(), 0);
-
-						} while (gameState.getLivesRemaining() > 0
-								&& gameState.getLevel()%NUM_LEVELS != 0);
-
-						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-								+ " score screen at " + FPS + " fps, with a score of "
-								+ gameState.getScore() + ", "
-								+ gameState.getLivesRemaining() + " lives remaining, "
-								+ gameState.getBulletsShot() + " bullets shot and "
-								+ gameState.getShipsDestroyed() + " ships destroyed.");
-						// Return to main menu.
-						returnCode = 1;
-						LOGGER.info("Closing score screen.");
-					} else {
-						do {
-							new Sound().backroundmusic();
-							// One extra live every few levels.
-							boolean bonusLife = gameState.getLevel()
-									% EXTRA_LIFE_FRECUENCY == 0
-									&& gameState.getLivesRemaining() < MAX_LIVES;
-
-							currentScreen = new GameScreen(gameState,
-									gameSettings.get((diff - 1) * 5),
-									bonusLife, width, height, FPS);
-							LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-									+ " game screen at " + FPS + " fps.");
-							frame.setScreen(currentScreen);
-							LOGGER.info("Closing game screen.");
-
-							gameState = ((GameScreen) currentScreen).getGameState();
-
-							gameState = new GameState(gameState.getLevel() + 1,
-									gameState.getScore(),
-									gameState.getLivesRemaining(),
-									gameState.getBulletsShot(),
-									gameState.getShipsDestroyed(),
-									gameState.getCoin());
-
-						} while (gameState.getLivesRemaining() > 0
-								&& gameState.getLevel()%NUM_LEVELS != 0);
-
-						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-								+ " score screen at " + FPS + " fps, with a score of "
-								+ gameState.getScore() + ", "
-								+ gameState.getLivesRemaining() + " lives remaining, "
-								+ gameState.getBulletsShot() + " bullets shot and "
-								+ gameState.getShipsDestroyed() + " ships destroyed.");
-						currentScreen = new ScoreScreen(width, height, FPS, gameState);
-						returnCode = frame.setScreen(currentScreen);
-						LOGGER.info("Closing score screen.");
-					}
+				// Load scenario
+				Scenario[] scenarios;
+				try {
+					scenarios = FileManager.getInstance().loadScenario(1, result_stage % 8);
+				} catch(IOException e) {
+					e.printStackTrace();
 					break;
+				}
 
+				// Show scenario pages
+				for(Scenario scenario : scenarios) {
+					ScenarioScreen scenarioScreen = new ScenarioScreen(width, height, FPS, scenario);
+					frame.setScreen(scenarioScreen);
+				}
+
+				// In now, we select 1 stage only. Later, we are goint to develop continuously.
+				GameScreen gameScreen = new GameScreen(gameState,
+										gameSettings.get(result_stage - 1),
+								false, width, height, FPS);
+				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " game screen at " + FPS + " fps.");
+				frame.setScreen(gameScreen);
+				LOGGER.info("Closing game screen.");
+				gameState = gameScreen.getGameState();
+
+				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " score screen at " + FPS + " fps, with a score of "
+								+ gameState.getScore() + ", "
+								+ gameState.getLivesRemaining() + " lives remaining, "
+								+ gameState.getBulletsShot() + " bullets shot and "
+								+ gameState.getShipsDestroyed() + " ships destroyed.");
+
+				//currentScreen = new ScoreScreen(width, height, FPS, gameState);
+
+				// here is to save gameState data
+				// HERE!!
+
+				// calculate latest result_stage
+				if(gameState.getScore() > 0) {
+					result_stage = Math.max(result_stage, ((StageScreen)currentScreen).getStageStatus());
+					if(result_stage + 1 <= NUM_STAGES) {
+						result_stage++;
+					}
+				}
+
+				currentScreen = new StageScreen(width, height, FPS, result_stage);
+
+				returnCode = frame.setScreen(currentScreen);
+				break;
 			case 3:
 				// High scores.
 				currentScreen = new HighScoreScreen(width, height, FPS);
