@@ -97,11 +97,31 @@ public final class Core {
 	 * settings for level 8.
 	 */
 	private static final GameSettings SETTINGS_LEVEL_8 = new GameSettings(10, 6, 1, 600);
-
 	/**
 	 * Difficulty settings for boss.
 	 */
 	private static final GameSettings boss = new GameSettings(1, 1, 5, 600);
+
+	/**
+	 * Difficulty settings for boss level 1.
+	 */
+	private static final GameSettings boss_level_1 = new GameSettings(1, 1, 5, 600);
+	/**
+	 * Difficulty settings for boss level 2.
+	 */
+	private static final GameSettings boss_level_2 = new GameSettings(1, 1, 5, 300);
+	/**
+	 * Difficulty settings for boss level 3.
+	 */
+	private static final GameSettings boss_level_3 = new GameSettings(2, 1, 5, 300);
+	/**
+	 * Difficulty settings for boss level 4.
+	 */
+	private static final GameSettings boss_level_4 = new GameSettings(2, 1, 5, 100);
+	/**
+	 * Difficulty settings for boss level 5.
+	 */
+	private static final GameSettings boss_level_5 = new GameSettings(3, 1, 5, 200);
 
 	/**
 	 * Frame to draw the screen on.
@@ -204,7 +224,12 @@ public final class Core {
 		gameSettings.add(SETTINGS_LEVEL_6);
 		gameSettings.add(SETTINGS_LEVEL_7);
 		gameSettings.add(SETTINGS_LEVEL_8);
-
+		gameSettings.add(boss);
+		gameSettings.add(boss_level_1);
+		gameSettings.add(boss_level_2);
+		gameSettings.add(boss_level_3);
+		gameSettings.add(boss_level_4);
+		gameSettings.add(boss_level_5);
 		GameState gameState;
 
 		int returnCode = 1;
