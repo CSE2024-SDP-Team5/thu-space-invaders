@@ -1352,5 +1352,23 @@ public final class DrawManager {
 		backBufferGraphics.drawString(stage5, 390, 340);
 
 	}
+	public void drawCountDownBoss(final Screen screen,  final int number) {
+		int rectWidth = screen.getWidth();
+		int rectHeight = screen.getHeight() / 6;
+		backBufferGraphics.setColor(Color.BLACK);
+		backBufferGraphics.fillRect(0, screen.getHeight() / 2 - rectHeight / 2,
+				rectWidth, rectHeight);
+		backBufferGraphics.setColor(HUDSettingScreen.getScreenColor());
+		if (number >= 4)
+			drawCenteredBigString(screen, "Boss ",
+					screen.getHeight() / 2
+							+ fontBigMetrics.getHeight() / 3);
+		else if (number != 0)
+			drawCenteredBigString(screen, Integer.toString(number),
+					screen.getHeight() / 2 + fontBigMetrics.getHeight() / 3);
+		else
+			drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
+					+ fontBigMetrics.getHeight() / 3);
+	}
 }
 
