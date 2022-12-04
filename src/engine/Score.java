@@ -1,5 +1,7 @@
 package engine;
 
+import java.util.List;
+
 /**
  * Implements a high score record.
  *
@@ -8,12 +10,10 @@ package engine;
  */
 public class Score implements Comparable<Score> {
 
-	/** Player's name. */
-	private String name;
-	/** Score points. */
-	private int score;
 	/** Stage */
 	private int stage;
+	/** Score points. */
+	private int score;
 	/** Killed Enemies */
 	private int killed;
 	/** Shooted Bullets */
@@ -24,12 +24,10 @@ public class Score implements Comparable<Score> {
 	/**
 	 * Constructor.
 	 *
-	 * @param name
-	 *            Player name, three letters.
-	 * @param score
-	 *            Player score.
 	 * @param stage
-	 *            Stage.
+	 *            Player Stage.
+	 * @param score
+	 *            Player scores.
 	 * @param killed
 	 *            Killed Enemies.
 	 * @param bullets
@@ -37,30 +35,20 @@ public class Score implements Comparable<Score> {
 	 * @param accuracy
 	 *            Accuracy Score.
 	 */
-	public Score(final String name, final int score, final int stage, final int killed, final int bullets, final float accuracy) {
-		this.name = name;
-		this.score = score;
+	public Score(final int stage, final int score, final int killed, final int bullets, final float accuracy) {
 		this.stage = stage;
+		this.score = score;
 		this.killed = killed;
 		this.bullets = bullets;
 		this.accuracy = accuracy;
 	}
 
-	// 현재 프로젝트에서 사용되는 생성자입니다. HighScoreScreen.java 등 생성자 쓰이는 부분 모두 반영되면 해당 생성자를 삭제할 것을 요망합니다.
-	public Score(final String name, final int score) {
-		this.name = name;
-		this.score = score;
-	}
-
-
 	/**
-	 * Getter for the player's name.
+	 * Getter for the stage.
 	 *
-	 * @return Name of the player.
+	 * @return Stage.
 	 */
-	public final String getName() {
-		return this.name;
-	}
+	public final int getStage() { return this.stage; }
 
 	/**
 	 * Getter for the player's score.
@@ -71,13 +59,6 @@ public class Score implements Comparable<Score> {
 		return this.score;
 	}
 
-
-	/**
-	 * Getter for the stage.
-	 *
-	 * @return Stage.
-	 */
-	public final int getStage() { return this.stage; }
 
 	/**
 	 * Getter for the Killed Enemies.
@@ -107,14 +88,32 @@ public class Score implements Comparable<Score> {
 	 *            Score to compare the current one with.
 	 * @return Comparison between the two scores. Positive if the current one is
 	 *         smaller, positive if its bigger, zero if its the same.
-	 *         정렬 1순위 : 점수(Score), 2순위 : 정확도(Accuracy)
+	 *         정렬 1순위 : 스테이지 (stage), 2순위 : 점수 (score)
 	 */
 	@Override
 	public final int compareTo(final Score score) {
-		int comparison_accuracy = this.accuracy < score.getAccuracy() ? 1 : this.accuracy > score.getAccuracy() ? -1 : 0;
-		int comparison_score = this.score < score.getScore() ? 1 : this.score > score.getScore() ? -1 : comparison_accuracy;
 
-		return comparison_score;
+		int comparison_score = this.score < score.getScore() ? 1 : this.score > score.getScore() ? -1 : 0;
+		int comparison_stage = this.stage < score.getStage() ? -1 : this.stage > score.getStage() ? 1 : comparison_score;
+
+		return comparison_stage;
 	}
 
+	/**
+	 * Put score in selected stage using this method.
+	 * @param highScores
+	 */
+	public static final List<Score> UpdateScore(final List<Score> highScores, Score newScore) {
+		for(int i = 0; i < highScores.size(); i++) {
+			if(highScores.get(i).getStage() == newScore.getStage()) {
+				if(highScores.get(i).getScore() < newScore.getScore()) {
+					highScores.set(i, newScore);
+					return highScores;
+				} else {
+					return null;
+				}
+			}
+		}
+		return null;
+	}
 }

@@ -22,7 +22,7 @@ public class StageScreen extends Screen {
      */
     private int stage_status = 1;
 
-    int prog_stage;
+    private int prog_stage;
 
 
     /**
@@ -103,6 +103,10 @@ public class StageScreen extends Screen {
             }
         }
 
+    }
+
+    public int getStageStatus() {
+        return this.stage_status;
     }
 
     /**
