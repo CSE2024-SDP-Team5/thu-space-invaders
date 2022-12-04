@@ -511,7 +511,8 @@ public final class DrawManager {
 	public void drawScenario (final Screen screen, Scenario scenario){
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
-		backBufferGraphics.drawString(scenario.getEnglishLine(), 35, 395);
+		backBufferGraphics.drawString("<" + Scenario.speaker_list[scenario.getSpeaker()] + ">", 35, 395);
+		backBufferGraphics.drawString(scenario.getEnglishLine(), 35, 425);
 	}
 
 	public void drawTitle(final Screen screen) {
