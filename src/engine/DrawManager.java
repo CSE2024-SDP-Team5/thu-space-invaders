@@ -472,7 +472,7 @@ public final class DrawManager {
 			backBufferGraphics.drawOval(stage_x[i],stage_y[i],20,20);
 			backBufferGraphics.fillOval(stage_x[i],stage_y[i],20,20);
 		}
-		for(int i=prog_stage+2;i<9;i++){ //no complete stages are gray color
+		for(int i=prog_stage+1;i<9;i++){ //no complete stages are gray color
 			backBufferGraphics.setColor(Color.GRAY);
 			if(i == 8){
 				backBufferGraphics.drawOval(stage_x[i]-10,stage_y[i]-10,40,40);

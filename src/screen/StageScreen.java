@@ -3,6 +3,7 @@ package screen;
 import engine.*;
 
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 
 /**
  * Implements the Map Stage screen.
@@ -72,13 +73,13 @@ public class StageScreen extends Screen {
             }
             if (inputManager.isKeyDown(KeyEvent.VK_DOWN)
                     || inputManager.isKeyDown(KeyEvent.VK_S)) {
-                if (stage_status < prog_stage && (stage_status == 3 || stage_status == 6)) stage_status++;
+                if (is_progress() && (stage_status == 3 || stage_status == 6)) stage_status++;
 
                 this.selectionCooldown.reset();
             }
             if (inputManager.isKeyDown(KeyEvent.VK_RIGHT)
                     || inputManager.isKeyDown(KeyEvent.VK_D)) {
-                if (stage_status < prog_stage && (stage_status < 3 || stage_status == 7)) stage_status++;
+                if (is_progress() && (stage_status == 1 || stage_status == 2 || stage_status == 7)) stage_status++;
                 else if (stage_status == 5 || stage_status == 6) stage_status--;
 
                 this.selectionCooldown.reset();
@@ -86,7 +87,7 @@ public class StageScreen extends Screen {
             if (inputManager.isKeyDown(KeyEvent.VK_LEFT)
                     || inputManager.isKeyDown(KeyEvent.VK_A)) {
                 if (stage_status == 2 || stage_status == 3 || stage_status == 8) stage_status--;
-                else if (stage_status < prog_stage && (stage_status == 4 || stage_status == 5)) stage_status++;
+                else if (is_progress() && (stage_status == 4 || stage_status == 5)) stage_status++;
 
                 this.selectionCooldown.reset();
             }
@@ -103,6 +104,10 @@ public class StageScreen extends Screen {
             }
         }
 
+    }
+
+    private boolean is_progress(){
+        return stage_status < prog_stage;
     }
 
     public int getStageStatus() {
