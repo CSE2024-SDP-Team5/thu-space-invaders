@@ -451,7 +451,7 @@ public final class DrawManager {
 	 */
 	public void drawStoryMap_Basic(final Screen screen){
 		backBufferGraphics.setFont(fontRegular);
-		backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.setColor(Color.CYAN);
 		backBufferGraphics.drawString("SELECT: SPACE", 10, 25);
 		backBufferGraphics.drawString("RETURN: ESCAPE", 10, 45);
 		drawCenteredBigString(screen, "Stage1", 40);
