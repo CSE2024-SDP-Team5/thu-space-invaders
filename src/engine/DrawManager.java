@@ -751,41 +751,6 @@ public final class DrawManager {
 		String newRecordString = "New Record!";
 		backBufferGraphics.setColor(HUDSettingScreen.getScreenColor());
 		drawCenteredRegularString(screen, newRecordString, screen.getHeight() / 4 + fontRegularMetrics.getHeight() * 10);
-
-		/*String introduceNameString = "Introduce name:";
-
-		backBufferGraphics.setColor(HUDSettingScreen.getScreenColor());
-		drawCenteredRegularString(screen, newRecordString, screen.getHeight()
-				/ 4 + fontRegularMetrics.getHeight() * 10);
-		backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, introduceNameString,
-				screen.getHeight() / 4 + fontRegularMetrics.getHeight() * 12);
-
-		// 3 letters name.
-		int positionX = screen.getWidth()
-				/ 2
-				- (fontRegularMetrics.getWidths()[name[0]]
-				+ fontRegularMetrics.getWidths()[name[1]]
-				+ fontRegularMetrics.getWidths()[name[2]]
-				+ fontRegularMetrics.getWidths()[' ']) / 2;
-
-		for (int i = 0; i < 3; i++) {
-			if (i == nameCharSelected)
-				backBufferGraphics.setColor(HUDSettingScreen.getScreenColor());
-			else
-				backBufferGraphics.setColor(Color.WHITE);
-
-			positionX += fontRegularMetrics.getWidths()[name[i]] / 2;
-			positionX = i == 0 ? positionX
-					: positionX
-					+ (fontRegularMetrics.getWidths()[name[i - 1]]
-					+ fontRegularMetrics.getWidths()[' ']) / 2;
-
-			backBufferGraphics.drawString(Character.toString(name[i]),
-					positionX,
-					screen.getHeight() / 4 + fontRegularMetrics.getHeight()
-							* 14);
-		}*/
 	}
 
 	/**
@@ -866,12 +831,16 @@ public final class DrawManager {
 		String bulletString = "";
 		String accuracyString = "";
 		String stageString = "";
+		String separateString = "";
 		for (Score score : highScores) {
 			scoreString = String.format("%d            %04d          %04d          %04d             %02.02f  ",
 					score.getStage(), score.getScore(), score.getKilled(), score.getBullets(),
 					score.getAccuracy()); // need change 5th variables and score.getStage()
+			separateString = String.format("---------------------------------------------");
 			drawCenteredRegularString(screen, scoreString, screen.getHeight()
 					/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+			drawCenteredRegularString(screen, separateString, screen.getHeight()
+					/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2 + 20);
 			i++;
 		}
 	}
