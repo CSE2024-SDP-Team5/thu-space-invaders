@@ -278,12 +278,14 @@ public final class Core {
 			case 101:
 				// Game & score
 				new Sound().backroundmusic();
-				if (result_stage < 8){
+				int st = ((StageScreen)currentScreen).getStageStatus();
+				gameState = new GameState(st, 0, MAX_LIVES, 0, 0, Coin.balance);
+				if (st < 8){
 
 					// Load scenario
 					Scenario[] scenarios;
 					try {
-						scenarios = FileManager.getInstance().loadScenario(1, result_stage % 8);
+						scenarios = FileManager.getInstance().loadScenario(1, st % 8);
 					} catch(IOException e) {
 						e.printStackTrace();
 						break;
@@ -295,9 +297,10 @@ public final class Core {
 						frame.setScreen(scenarioScreen);
 					}
 
+
 					// In now, we select 1 stage only. Later, we are goint to develop continuously.
 					GameScreen gameScreen = new GameScreen(gameState,
-							gameSettings.get(result_stage - 1),
+							gameSettings.get(st - 1),
 							false, width, height, FPS);
 					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 							+ " game screen at " + FPS + " fps.");
@@ -329,7 +332,7 @@ public final class Core {
 					// Load scenario
 					Scenario[] scenarios;
 					try {
-						scenarios = FileManager.getInstance().loadScenario(1, 7);
+						scenarios = FileManager.getInstance().loadScenario(1, 8);
 					} catch(IOException e) {
 						e.printStackTrace();
 						break;
@@ -343,7 +346,7 @@ public final class Core {
 
 					// In now, we select 1 stage only. Later, we are goint to develop continuously.
 					BossScreen bossScreen = new BossScreen(gameState,
-							gameSettings.get(result_stage + 1), false, width,
+							gameSettings.get(8), false, width,
 							height, FPS);
 //					GameScreen gameScreen = new GameScreen(gameState,
 //							gameSettings.get(result_stage - 1),
