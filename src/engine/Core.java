@@ -1,5 +1,6 @@
 package engine;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -255,7 +256,12 @@ public final class Core {
 				try {
 					// load stage
 					highScores = getFileManager().loadHighScores();
-					result_stage = highScores.get(highScores.size() - 1).getStage() + 1;
+					for (Score sc : highScores) {
+						if (sc.getScore() == 0 && sc.getAccuracy() == 0 && sc.getBullets() == 0 && sc.getKilled() == 0) {
+							result_stage = sc.getStage();
+							break;
+						}
+					}
 					// Exception Handling for result_stage (> NUM_STAGES)
 					if(result_stage > NUM_STAGES) result_stage--;
 				} catch (IOException e){
