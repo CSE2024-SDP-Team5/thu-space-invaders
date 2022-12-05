@@ -20,9 +20,9 @@ import engine.Inventory.InventoryEntry;
 
 /**
  * Implements core game logic.
- * 
+ *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ *
  */
 public final class Core {
 
@@ -235,7 +235,25 @@ public final class Core {
 		int returnCode = 1;
 			do {
 				gameState = new GameState(1, 0, MAX_LIVES, 0, 0, Coin.balance);
-			int result_stage = 1;
+				int result_stage = 1;
+
+				List<Score> highScores;
+
+				try {
+					// load stage
+					highScores = getFileManager().loadHighScores();
+					for (Score sc : highScores) {
+						if (sc.getScore() == 0 && sc.getAccuracy() == 0 && sc.getBullets() == 0 && sc.getKilled() == 0) {
+							result_stage = sc.getStage();
+							break;
+						}
+					}
+					// Exception Handling for result_stage (> NUM_STAGES)
+					if(result_stage > NUM_STAGES) result_stage--;
+				} catch (IOException e){
+					//If the player doesn't clear any stages, it returns stage 1
+
+				}
 
 			switch (returnCode) {
 
@@ -250,18 +268,6 @@ public final class Core {
 
 			case 2:
 				//Stage
-				List<Score> highScores;
-
-				try {
-					// load stage
-					highScores = getFileManager().loadHighScores();
-					result_stage = highScores.get(highScores.size() - 1).getStage() + 1;
-					// Exception Handling for result_stage (> NUM_STAGES)
-					if(result_stage > NUM_STAGES) result_stage--;
-				} catch (IOException e){
-					//If the player doesn't clear any stages, it returns stage 1
-					result_stage = 1;
-				}
 				currentScreen = new StageScreen(width, height, FPS, result_stage);
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 						+ " setting screen at " + FPS + " fps.");
@@ -440,7 +446,7 @@ public final class Core {
 
 	/**
 	 * Controls creation of new cooldowns.
-	 * 
+	 *
 	 * @param milliseconds
 	 *            Duration of the cooldown.
 	 * @return A new cooldown.
@@ -451,7 +457,7 @@ public final class Core {
 
 	/**
 	 * Controls creation of new cooldowns with variance.
-	 * 
+	 *
 	 * @param milliseconds
 	 *            Duration of the cooldown.
 	 * @param variance
