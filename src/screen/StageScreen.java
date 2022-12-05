@@ -106,7 +106,7 @@ public class StageScreen extends Screen {
 
     }
 
-    private boolean is_progress(){
+    public boolean is_progress(){
         return stage_status < prog_stage;
     }
 
