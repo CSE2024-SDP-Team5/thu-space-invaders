@@ -451,7 +451,7 @@ public final class DrawManager {
 	 */
 	public void drawStoryMap_Basic(final Screen screen){
 		backBufferGraphics.setFont(fontRegular);
-		backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.setColor(Color.CYAN);
 		backBufferGraphics.drawString("SELECT: SPACE", 10, 25);
 		backBufferGraphics.drawString("RETURN: ESCAPE", 10, 45);
 		drawCenteredBigString(screen, "Stage1", 40);
@@ -461,7 +461,7 @@ public final class DrawManager {
 	public void drawStoryMap_Map(final Screen screen, int prog_stage){
 		int[] stage_x = {0,112,224,336,336,224,112,112,224};
 		int[] stage_y = {0,103,103,103,205,205,205,307,307};
-		for(int i = 1; i < prog_stage+1; i++){ //complete stages are orange color
+		for(int i = 1; i < prog_stage+2; i++){ //complete stages are orange color
 			if(i == 8){
 				backBufferGraphics.setColor(Color.MAGENTA);
 				backBufferGraphics.drawOval(stage_x[i]-10,stage_y[i]-10,40,40);
@@ -494,22 +494,17 @@ public final class DrawManager {
 	public void drawStoryMap_Control(final Screen screen, int stage_status){
 		int[] stage_x = {0,112,224,336,336,224,112,112,224};
 		int[] stage_y = {0,103,103,103,205,205,205,307,307};
-		for(int i=1 ; i < 9 ; i++){
-			if(i == stage_status){ // stage가 선택 될 경우 해당 그것만 초록색 받음
-				backBufferGraphics.setColor(Color.GREEN);
-				if(i<8){
-					backBufferGraphics.drawOval(stage_x[i],stage_y[i],20,20);
-					backBufferGraphics.fillOval(stage_x[i],stage_y[i],20,20);
-				}
-				else{
-					backBufferGraphics.drawOval(stage_x[i],stage_y[i],20,20);
-					backBufferGraphics.fillOval(stage_x[i],stage_y[i],20,20);
-				}
-				backBufferGraphics.setColor(Color.white);
-				backBufferGraphics.drawString("1-" + Integer.toString(i),35,395);
-			}
+		backBufferGraphics.setColor(Color.GREEN);
+		backBufferGraphics.drawOval(stage_x[stage_status],stage_y[stage_status],20,20);
+		backBufferGraphics.fillOval(stage_x[stage_status],stage_y[stage_status],20,20);
+		if(stage_status == 8){ //select boss
+			backBufferGraphics.drawOval(stage_x[stage_status]-10,stage_y[stage_status]-10,40,40);
+			backBufferGraphics.fillOval(stage_x[stage_status]-10,stage_y[stage_status]-10,40,40);
 		}
+		backBufferGraphics.setColor(Color.white);
+		backBufferGraphics.drawString("1-" + Integer.toString(stage_status),35,395);
 	}
+
 
 	public void drawScenario (final Screen screen, Scenario scenario){
 		backBufferGraphics.setFont(fontRegular);
@@ -546,7 +541,6 @@ public final class DrawManager {
 		backBufferGraphics.setColor(Color.GRAY);
 		drawCenteredRegularString(screen, instructionsString, screen.getHeight() / 5);
 	}
-
 	public void drawMenu(final Screen screen, final int option) {
 		String playString = "Play";
 		String highScoresString = "High scores";
@@ -815,7 +809,7 @@ public final class DrawManager {
 	 * Draws interactive characters for name input.
 	 *
 	 * @param screen           Screen to draw on.
-	 * @param name             Current name selected.
+	 * @param stage             Current name selected.
 	 * @param nameCharSelected Current character selected for modification.
 	 */
 	public void drawStageInput(final Screen screen, final int stage,
