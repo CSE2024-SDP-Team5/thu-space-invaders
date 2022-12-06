@@ -20,9 +20,9 @@ import engine.Inventory.InventoryEntry;
 
 /**
  * Implements core game logic.
- * 
+ *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ *
  */
 public final class Core {
 
@@ -235,7 +235,25 @@ public final class Core {
 		int returnCode = 1;
 			do {
 				gameState = new GameState(1, 0, MAX_LIVES, 0, 0, Coin.balance);
-			int result_stage = 1;
+				int result_stage = 1;
+
+				List<Score> highScores;
+
+				try {
+					// load stage
+					highScores = getFileManager().loadHighScores();
+					for (Score sc : highScores) {
+						if (sc.getScore() == 0 && sc.getAccuracy() == 0 && sc.getBullets() == 0 && sc.getKilled() == 0) {
+							result_stage = sc.getStage();
+							break;
+						}
+					}
+					// Exception Handling for result_stage (> NUM_STAGES)
+					if(result_stage > NUM_STAGES) result_stage--;
+				} catch (IOException e){
+					//If the player doesn't clear any stages, it returns stage 1
+
+				}
 
 			switch (returnCode) {
 
@@ -250,18 +268,6 @@ public final class Core {
 
 			case 2:
 				//Stage
-				List<Score> highScores;
-
-				try {
-					// load stage
-					highScores = getFileManager().loadHighScores();
-					result_stage = highScores.get(highScores.size() - 1).getStage() + 1;
-					// Exception Handling for result_stage (> NUM_STAGES)
-					if(result_stage > NUM_STAGES) result_stage--;
-				} catch (IOException e){
-					//If the player doesn't clear any stages, it returns stage 1
-					result_stage = 1;
-				}
 				currentScreen = new StageScreen(width, height, FPS, result_stage);
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 						+ " setting screen at " + FPS + " fps.");
@@ -272,50 +278,91 @@ public final class Core {
 			case 101:
 				// Game & score
 				new Sound().backroundmusic();
+				int st = ((StageScreen)currentScreen).getStageStatus();
+				gameState = new GameState(st, 0, MAX_LIVES, 0, 0, Coin.balance);
+				if (st < 8){
 
-				// Load scenario
-				Scenario[] scenarios;
-				try {
-					scenarios = FileManager.getInstance().loadScenario(1, result_stage % 8);
-				} catch(IOException e) {
-					e.printStackTrace();
-					break;
-				}
-
-				// Show scenario pages
-				for(Scenario scenario : scenarios) {
-					ScenarioScreen scenarioScreen = new ScenarioScreen(width, height, FPS, scenario);
-					frame.setScreen(scenarioScreen);
-				}
-
-				// In now, we select 1 stage only. Later, we are goint to develop continuously.
-				GameScreen gameScreen = new GameScreen(gameState,
-										gameSettings.get(result_stage - 1),
-								false, width, height, FPS);
-				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-								+ " game screen at " + FPS + " fps.");
-				frame.setScreen(gameScreen);
-				LOGGER.info("Closing game screen.");
-				gameState = gameScreen.getGameState();
-
-				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-								+ " score screen at " + FPS + " fps, with a score of "
-								+ gameState.getScore() + ", "
-								+ gameState.getLivesRemaining() + " lives remaining, "
-								+ gameState.getBulletsShot() + " bullets shot and "
-								+ gameState.getShipsDestroyed() + " ships destroyed.");
-
-				//currentScreen = new ScoreScreen(width, height, FPS, gameState);
-
-				// here is to save gameState data
-				// HERE!!
-
-				// calculate latest result_stage
-				if(gameState.getScore() > 0) {
-					result_stage = Math.max(result_stage, ((StageScreen)currentScreen).getStageStatus());
-					if(result_stage + 1 <= NUM_STAGES) {
-						result_stage++;
+					// Load scenario
+					Scenario[] scenarios;
+					try {
+						scenarios = FileManager.getInstance().loadScenario(1, st % 8);
+					} catch(IOException e) {
+						e.printStackTrace();
+						break;
 					}
+
+					// Show scenario pages
+					for(Scenario scenario : scenarios) {
+						ScenarioScreen scenarioScreen = new ScenarioScreen(width, height, FPS, scenario);
+						frame.setScreen(scenarioScreen);
+					}
+
+
+					// In now, we select 1 stage only. Later, we are goint to develop continuously.
+					GameScreen gameScreen = new GameScreen(gameState,
+							gameSettings.get(st - 1),
+							false, width, height, FPS);
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " game screen at " + FPS + " fps.");
+					frame.setScreen(gameScreen);
+					LOGGER.info("Closing game screen.");
+					gameState = gameScreen.getGameState();
+
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " score screen at " + FPS + " fps, with a score of "
+							+ gameState.getScore() + ", "
+							+ gameState.getLivesRemaining() + " lives remaining, "
+							+ gameState.getBulletsShot() + " bullets shot and "
+							+ gameState.getShipsDestroyed() + " ships destroyed.");
+
+					//currentScreen = new ScoreScreen(width, height, FPS, gameState);
+
+					// here is to save gameState data
+					// HERE!!
+
+					// calculate latest result_stage
+					if(gameState.getScore() > 0) {
+						result_stage = Math.max(result_stage, ((StageScreen)currentScreen).getStageStatus());
+						if(result_stage + 1 <= NUM_STAGES) {
+							result_stage++;
+						}
+					}
+				} else {
+
+					// Load scenario
+					Scenario[] scenarios;
+					try {
+						scenarios = FileManager.getInstance().loadScenario(1, 8);
+					} catch(IOException e) {
+						e.printStackTrace();
+						break;
+					}
+
+					// Show scenario pages
+					for(Scenario scenario : scenarios) {
+						ScenarioScreen scenarioScreen = new ScenarioScreen(width, height, FPS, scenario);
+						frame.setScreen(scenarioScreen);
+					}
+
+					// In now, we select 1 stage only. Later, we are goint to develop continuously.
+					BossScreen bossScreen = new BossScreen(gameState,
+							gameSettings.get(8), false, width,
+							height, FPS);
+//					GameScreen gameScreen = new GameScreen(gameState,
+//							gameSettings.get(result_stage - 1),
+//							false, width, height, FPS);
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " game screen at " + FPS + " fps.");
+					frame.setScreen(bossScreen);
+					LOGGER.info("Closing game screen.");
+					gameState = bossScreen.getGameState();
+
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " score screen at " + FPS + " fps, with a score of "
+							+ gameState.getScore() + ", "
+							+ gameState.getLivesRemaining() + " lives remaining, "
+							+ gameState.getBulletsShot() + " bullets shot and "
+							+ gameState.getShipsDestroyed() + " ships destroyed.");
 				}
 
 				currentScreen = new StageScreen(width, height, FPS, result_stage);
@@ -440,7 +487,7 @@ public final class Core {
 
 	/**
 	 * Controls creation of new cooldowns.
-	 * 
+	 *
 	 * @param milliseconds
 	 *            Duration of the cooldown.
 	 * @return A new cooldown.
@@ -451,7 +498,7 @@ public final class Core {
 
 	/**
 	 * Controls creation of new cooldowns with variance.
-	 * 
+	 *
 	 * @param milliseconds
 	 *            Duration of the cooldown.
 	 * @param variance
