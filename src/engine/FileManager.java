@@ -201,24 +201,7 @@ public final class FileManager {
 			saveHighScores(highScores);
 
 		}
-//		catch (InputMismatchException ex) {
-//			logger.info("Loading");
-//			String jarPath = FileManager.class.getProtectionDomain()
-//					.getCodeSource().getLocation().getPath();
-//			jarPath = URLDecoder.decode(jarPath, "UTF-8");
-//
-//			String scoresPath = new File(jarPath).getParent();
-//			scoresPath += File.separator;
-//			scoresPath += "scores";
-//
-//			File scoresFile = new File(scoresPath);
-//			scoresFile.delete();
-//
-//
-//
-//			highScores = loadDefaultHighScores();
-//			return highScores;
-//		}
+
 		finally {
 			if (bufferedReader != null)
 				bufferedReader.close();
