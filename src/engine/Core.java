@@ -1,6 +1,5 @@
 package engine;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +20,9 @@ import engine.Inventory.InventoryEntry;
 
 /**
  * Implements core game logic.
- * 
+ *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ *
  */
 public final class Core {
 
@@ -234,162 +233,204 @@ public final class Core {
 		GameState gameState;
 
 		int returnCode = 1;
-			do {
-				gameState = new GameState(1, 0, MAX_LIVES, 0, 0, Coin.balance);
+		do {
+			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, Coin.balance);
 			int result_stage = 1;
+
+			List<Score> highScores;
+
+			try {
+				// load stage
+				highScores = getFileManager().loadHighScores();
+				for (Score sc : highScores) {
+					if (sc.getScore() == 0 && sc.getAccuracy() == 0 && sc.getBullets() == 0 && sc.getKilled() == 0) {
+						result_stage = sc.getStage();
+						break;
+					}
+				}
+				// Exception Handling for result_stage (> NUM_STAGES)
+				if(result_stage > NUM_STAGES) result_stage--;
+			} catch (IOException e){
+				//If the player doesn't clear any stages, it returns stage 1
+
+			}
 
 			switch (returnCode) {
 
-			case 1:
-				// Main menu.
-				currentScreen = new TitleScreen(width, height, FPS);
-				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-						+ " title screen at " + FPS + " fps.");
-				returnCode = frame.setScreen(currentScreen);
-				LOGGER.info("Closing title screen.");
-				break;
+				case 1:
+					// Main menu.
+					currentScreen = new TitleScreen(width, height, FPS);
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " title screen at " + FPS + " fps.");
+					returnCode = frame.setScreen(currentScreen);
+					LOGGER.info("Closing title screen.");
+					break;
 
-			case 2:
-				//Stage
-				List<Score> highScores;
+				case 2:
+					//Stage
+					currentScreen = new StageScreen(width, height, FPS, result_stage);
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " setting screen at " + FPS + " fps.");
+					returnCode = frame.setScreen(currentScreen);
+					LOGGER.info("Closing setting screen.");
+					break;
 
-				try {
-					// load stage
-					highScores = getFileManager().loadHighScores();
-					for (Score sc : highScores) {
-						if (sc.getScore() == 0 && sc.getAccuracy() == 0 && sc.getBullets() == 0 && sc.getKilled() == 0) {
-							result_stage = sc.getStage();
+				case 101:
+					// Game & score
+					new Sound().backroundmusic();
+					int st = ((StageScreen)currentScreen).getStageStatus();
+					gameState = new GameState(st, 0, MAX_LIVES, 0, 0, Coin.balance);
+					if (st < 8){
+
+						// Load scenario
+						Scenario[] scenarios;
+						try {
+							scenarios = FileManager.getInstance().loadScenario(1, st % 8);
+						} catch(IOException e) {
+							e.printStackTrace();
 							break;
 						}
-					}
-					// Exception Handling for result_stage (> NUM_STAGES)
-					if(result_stage > NUM_STAGES) result_stage--;
-				} catch (IOException e){
-					//If the player doesn't clear any stages, it returns stage 1
-					result_stage = 1;
-				}
-				currentScreen = new StageScreen(width, height, FPS, result_stage);
-				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-						+ " setting screen at " + FPS + " fps.");
-				returnCode = frame.setScreen(currentScreen);
-				LOGGER.info("Closing setting screen.");
-				break;
 
-			case 101:
-				// Game & score
-				new Sound().backroundmusic();
+						// Show scenario pages
+						for(Scenario scenario : scenarios) {
+							ScenarioScreen scenarioScreen = new ScenarioScreen(width, height, FPS, scenario);
+							frame.setScreen(scenarioScreen);
+						}
 
-				// Load scenario
-				Scenario[] scenarios;
-				try {
-					scenarios = FileManager.getInstance().loadScenario(1, result_stage % 8);
-				} catch(IOException e) {
-					e.printStackTrace();
-					break;
-				}
 
-				// Show scenario pages
-				for(Scenario scenario : scenarios) {
-					ScenarioScreen scenarioScreen = new ScenarioScreen(width, height, FPS, scenario);
-					frame.setScreen(scenarioScreen);
-				}
-
-				// In now, we select 1 stage only. Later, we are goint to develop continuously.
-				GameScreen gameScreen = new GameScreen(gameState,
-										gameSettings.get(result_stage - 1),
+						// In now, we select 1 stage only. Later, we are goint to develop continuously.
+						GameScreen gameScreen = new GameScreen(gameState,
+								gameSettings.get(st - 1),
 								false, width, height, FPS);
-				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 								+ " game screen at " + FPS + " fps.");
-				frame.setScreen(gameScreen);
-				LOGGER.info("Closing game screen.");
-				gameState = gameScreen.getGameState();
+						frame.setScreen(gameScreen);
+						LOGGER.info("Closing game screen.");
+						gameState = gameScreen.getGameState();
 
-				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 								+ " score screen at " + FPS + " fps, with a score of "
 								+ gameState.getScore() + ", "
 								+ gameState.getLivesRemaining() + " lives remaining, "
 								+ gameState.getBulletsShot() + " bullets shot and "
 								+ gameState.getShipsDestroyed() + " ships destroyed.");
 
-				//currentScreen = new ScoreScreen(width, height, FPS, gameState);
+						//currentScreen = new ScoreScreen(width, height, FPS, gameState);
 
-				// here is to save gameState data
-				// HERE!!
+						// here is to save gameState data
+						// HERE!!
 
-				// calculate latest result_stage
-				if(gameState.getScore() > 0) {
-					result_stage = Math.max(result_stage, ((StageScreen)currentScreen).getStageStatus());
-					if(result_stage + 1 <= NUM_STAGES) {
-						result_stage++;
+						// calculate latest result_stage
+						if(gameState.getScore() > 0) {
+							result_stage = Math.max(result_stage, ((StageScreen)currentScreen).getStageStatus());
+							if(result_stage + 1 <= NUM_STAGES) {
+								result_stage++;
+							}
+						}
+					} else {
+
+						// Load scenario
+						Scenario[] scenarios;
+						try {
+							scenarios = FileManager.getInstance().loadScenario(1, 8);
+						} catch(IOException e) {
+							e.printStackTrace();
+							break;
+						}
+
+						// Show scenario pages
+						for(Scenario scenario : scenarios) {
+							ScenarioScreen scenarioScreen = new ScenarioScreen(width, height, FPS, scenario);
+							frame.setScreen(scenarioScreen);
+						}
+
+						// In now, we select 1 stage only. Later, we are goint to develop continuously.
+						BossScreen bossScreen = new BossScreen(gameState,
+								gameSettings.get(8), false, width,
+								height, FPS);
+//					GameScreen gameScreen = new GameScreen(gameState,
+//							gameSettings.get(result_stage - 1),
+//							false, width, height, FPS);
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " game screen at " + FPS + " fps.");
+						frame.setScreen(bossScreen);
+						LOGGER.info("Closing game screen.");
+						gameState = bossScreen.getGameState();
+
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " score screen at " + FPS + " fps, with a score of "
+								+ gameState.getScore() + ", "
+								+ gameState.getLivesRemaining() + " lives remaining, "
+								+ gameState.getBulletsShot() + " bullets shot and "
+								+ gameState.getShipsDestroyed() + " ships destroyed.");
 					}
-				}
 
-				currentScreen = new StageScreen(width, height, FPS, result_stage);
+					currentScreen = new StageScreen(width, height, FPS, result_stage);
 
-				returnCode = frame.setScreen(currentScreen);
-				break;
-			case 3:
-				// High scores.
-				currentScreen = new HighScoreScreen(width, height, FPS);
-				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-						+ " high score screen at " + FPS + " fps.");
-				returnCode = frame.setScreen(currentScreen);
-				LOGGER.info("Closing high score screen.");
-				break;
-			case 4:
-				//Setting.
-				currentScreen = new SettingScreen(width, height, FPS);
-				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-						+ " setting screen at " + FPS + " fps.");
-				returnCode = frame.setScreen(currentScreen);
-				LOGGER.info("Closing setting screen.");
-				break;
-			case 5:
-				//Store.
-				currentScreen = new ShopScreen(width, height, FPS, 1);
-				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-						+ " store screen at " + FPS + " fps.");
-				returnCode = frame.setScreen(currentScreen);
-				LOGGER.info("Closing store screen.");
-				break;
+					returnCode = frame.setScreen(currentScreen);
+					break;
+				case 3:
+					// High scores.
+					currentScreen = new HighScoreScreen(width, height, FPS);
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " high score screen at " + FPS + " fps.");
+					returnCode = frame.setScreen(currentScreen);
+					LOGGER.info("Closing high score screen.");
+					break;
+				case 4:
+					//Setting.
+					currentScreen = new SettingScreen(width, height, FPS);
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " setting screen at " + FPS + " fps.");
+					returnCode = frame.setScreen(currentScreen);
+					LOGGER.info("Closing setting screen.");
+					break;
+				case 5:
+					//Store.
+					currentScreen = new ShopScreen(width, height, FPS, 1);
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " store screen at " + FPS + " fps.");
+					returnCode = frame.setScreen(currentScreen);
+					LOGGER.info("Closing store screen.");
+					break;
 
-			case 400050:
-				//HUDSettingScreen.
-				currentScreen = new HUDSettingScreen(width, height, FPS);
-				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-						+ " HUDSetting screen at " + FPS + " fps.");
-				returnCode = frame.setScreen(currentScreen);
-				LOGGER.info("Closing HUDSetting screen.");
-				break;
+				case 400050:
+					//HUDSettingScreen.
+					currentScreen = new HUDSettingScreen(width, height, FPS);
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " HUDSetting screen at " + FPS + " fps.");
+					returnCode = frame.setScreen(currentScreen);
+					LOGGER.info("Closing HUDSetting screen.");
+					break;
 
-            case 400010:
-	            // Main menu.
-	            /* This makes the old window disappear */
-	            Frame old_frame = frame;
-	            /* This creates a new window with new width & height values */
-	            frame = new Frame(WIDTH, HEIGHT);
-	            DrawManager.getInstance().setFrame(frame);
-	            width = frame.getWidth();
-	            height = frame.getHeight();
-	            currentScreen = new TitleScreen(width, height, FPS);
-	            old_frame.dispose();
-	            LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-			            + " title screen at " + FPS + " fps.");
-	            returnCode = frame.setScreen(currentScreen);
-	            LOGGER.info("Closing title screen.");
-	            break;
+				case 400010:
+					// Main menu.
+					/* This makes the old window disappear */
+					Frame old_frame = frame;
+					/* This creates a new window with new width & height values */
+					frame = new Frame(WIDTH, HEIGHT);
+					DrawManager.getInstance().setFrame(frame);
+					width = frame.getWidth();
+					height = frame.getHeight();
+					currentScreen = new TitleScreen(width, height, FPS);
+					old_frame.dispose();
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " title screen at " + FPS + " fps.");
+					returnCode = frame.setScreen(currentScreen);
+					LOGGER.info("Closing title screen.");
+					break;
 
-			case 400060:
-				//HelpScreen.
-				currentScreen = new HelpScreen(width, height, FPS);
-				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-						+ " Help screen at " + FPS + " fps.");
-				returnCode = frame.setScreen(currentScreen);
-				LOGGER.info("Closing Help screen.");
-				break;
+				case 400060:
+					//HelpScreen.
+					currentScreen = new HelpScreen(width, height, FPS);
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " Help screen at " + FPS + " fps.");
+					returnCode = frame.setScreen(currentScreen);
+					LOGGER.info("Closing Help screen.");
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 
 		} while (returnCode != 0);
@@ -446,7 +487,7 @@ public final class Core {
 
 	/**
 	 * Controls creation of new cooldowns.
-	 * 
+	 *
 	 * @param milliseconds
 	 *            Duration of the cooldown.
 	 * @return A new cooldown.
@@ -457,7 +498,7 @@ public final class Core {
 
 	/**
 	 * Controls creation of new cooldowns with variance.
-	 * 
+	 *
 	 * @param milliseconds
 	 *            Duration of the cooldown.
 	 * @param variance
