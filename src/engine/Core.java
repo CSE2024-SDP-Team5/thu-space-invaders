@@ -349,8 +349,8 @@ public final class Core {
 								gameSettings.get(8), false, width,
 								height, FPS);
 //					GameScreen gameScreen = new GameScreen(gameState,
-//								gameSettings.get(result_stage - 1),
-//								false, width, height, FPS);
+//							gameSettings.get(result_stage - 1),
+//							false, width, height, FPS);
 						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 								+ " game screen at " + FPS + " fps.");
 						frame.setScreen(bossScreen);
